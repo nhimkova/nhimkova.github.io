@@ -2,7 +2,7 @@ body{
 	margin: 0;
 	padding:0;
 	font-family: 'Lato', sans-serif;
-	color: BCBBBB;
+	color: #bcbbbb;
 	font-size: 17px;
 }
 
@@ -29,7 +29,7 @@ body{
 
 .box-33 {
 	margin-right: 20px;
-	width: calc((100% - 40px)/3);
+	width: calc((100% - 40px) / 3);
 	object-fit: cover;
 }
 
@@ -127,4 +127,51 @@ a {
   	width: 100%;
   	margin-bottom: 30px;
 
+}
+
+@media screen and (max-width: 650px) {
+	div.main-title h1 {
+		font-size: 35px;
+		margin-bottom: 5px;
+	}
+
+	div.main-title h2 {
+		font-size: 18px;
+		bottom: 10px;
+	}
+
+	.featured {
+		font-size: 25px;
+	}
+
+	.label {
+		font-size: 20px;
+	}
+}
+
+
+@media screen and (max-width: 545px) {
+	.container {
+		margin-left: 8px;
+		margin-right: 8px;
+	}
+
+	div.main-title h1 {
+		margin-bottom: 0;
+		bottom: 20px;
+	}
+
+	div.main-title h2 {
+		bottom: 0px;
+	}
+
+	img.big-img {
+		height: 200px;
+	}
+
+	.box-33 {
+		width: 100%;
+		margin-right: 0;
+		margin-bottom: 20px;
+	}
 }

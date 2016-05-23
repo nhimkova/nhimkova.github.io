@@ -1,67 +1,90 @@
-<!DOCTYPE HTML>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
 
-		<title>Quynh Tran Front End Ninja</title>
+.subunit.Group1 { fill: #F5E9CA; }
+.subunit.Group2 { fill: #6DA690; }
+.subunit.Group3 { fill: #BAC366; }
+.subunit.Group4 { fill: #FE4D57; }
+.subunit.Group5 { fill: #1D0463; }
 
-		<link href="css/style.css" rel="stylesheet">
+.subunit-boundary {
+  fill: none;
+  stroke: #777;
+  stroke-width: 1px;
+  //stroke-dasharray: 2,2;
+  stroke-linejoin: round;
+}
 
-		<link href='https://fonts.googleapis.com/css?family=Martel+Sans:400,200' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Work+Sans:100' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
 
-	</head>
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script>
 
-	<body>
-		<section id="title-bar">
-			<div class="container">
-					<div class="box-25">
-						<img class="logo-img" src="img/Udacity_logo.png" alt="Udacity Logo">
-					</div>
-					<div class="box-75 main-title"> 
-						<h1>QUYNH TRAN</h1>
-						<h2> FRONT-END NINJA</h2>
-					</div>
-			</div>
-			<div class="container">
-				<div class="divider"></div>
-			</div>
-		</section>
+var width = 960,
+    height = 960;
 
-		<section id="main">
-			<div class="container big-image">
-					<div class="box-100">
-						<img class="big-img" src="img/code.jpg" alt="Big Image">
-					</div>
-			</div>
+ var projection = d3.geo.mercator()
+    .translate([width / 2, height / 2])
+    .scale((width - 1) / 2 / Math.PI);
 
-			<div class="container">
-					<div class="box-100">
-						<p class="featured">Featured work</p>
-					</div>
-					<div class="box-33">
-						<img class="img-thumbnail" src="img/apps.jpg" alt="Apps">
-						<p class="label"> APPIFY</p>
-						<p class="link"><a href="url">https://www.github.com/Udacity/Appify</a></p>
-					</div>
-					<div class="box-33">
-						<img class="img-thumbnail" src="img/sunflower.jpg" alt="Sunflower">
-						<p class="label"> SUNFLOWER</p>
-						<p class="link"><a href="url">https://www.github.com/Udacity/Sunflower</a></p>
-					</div>
-					<div class="box-33 last">
-						<img class="img-thumbnail" src="img/bokeh.jpg" alt="bokeh">
-						<p class="label"> BOKEH</p>
-						<p class="link"><a href="url">https://www.github.com/Udacity/Bokeh</a></p>
-					</div>
-			</div>
+var zoom = d3.behavior.zoom()
+    .scaleExtent([1, 8])
+    .on("zoom", zoomed);
 
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+   .append("g");
 
-		</section>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	    <script src="js/bootstrap.js"></script>
-	</body>
-</html>
+var g = svg.append("g");
+
+svg.append("rect")
+    .attr("class", "overlay")
+    .attr("width", width)
+    .attr("height", height);
+
+svg
+    .call(zoom)
+    .call(zoom.event);
+
+var colorcode;
+
+d3.json("randomcountries.json", function(error, data) {
+	if (error) return console.error(error);
+	colorcode = data;
+});
+
+d3.json("world.json", function(error, world) {
+  if (error) return console.error(error);
+
+  var subunits = topojson.feature(world, world.objects.world_subunits);
+
+  var path = d3.geo.path()
+	.projection(projection);
+
+  g.append("path")
+      .datum(subunits)
+      .attr("d", path);
+
+  g.selectAll(".subunit")
+    .data(topojson.feature(world, world.objects.world_subunits).features)
+  .enter().append("path")
+    .attr("class", function(d) { return "subunit-boundary subunit Group" + colorcode[d.id]})
+    .attr("d", path);
+});
+
+function zoomed() {
+  g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  g.select("subunit-boundary").style("stroke-width", 1 / d3.event.scale + "px");
+}
+
+d3.select(self.frameElement).style("height", height + "px");
+
+</script>

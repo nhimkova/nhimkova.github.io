@@ -178,7 +178,8 @@ function getiso2(id) {
 }
 
 function getGroup(value) {
-  if (value < 2) return 1;
+  if (value == 0) return 10;
+  else if (value < 2) return 1;
   else if (value < 5) return 2;
   else if (value < 10) return 3;
   else if (value < 15) return 4;
@@ -186,8 +187,7 @@ function getGroup(value) {
   else if (value < 50) return 6;
   else if (value < 100) return 7;
   else if (value < 150) return 8;
-  else if (value < 200) return 9;
-  else return 10;
+  else return 9;
 }
 
 d3.select(self.frameElement).style("height", height + "px");
